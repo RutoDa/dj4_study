@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}我有屁要放{% endblock %}
+{% block content %}
+{% if message %}
+    <div class="alert alert-warning">{{ message }}</div>
+{% endif %}
+<div class="container">
+    <script>
+        function go_delete(id) {
+            let user_pass = document.getElementById('user_pass').value;
+            if (user_pass != "") {
+                let usr = '/delpost/' + id + '/' + user_pass + '/';
+                window.location = usr;
+            }
+        }
+    </script>
+    <form name='my form' action="/" method="GET">
+        現在的心情: <br>
+        {% for mood in moods %}
+        <input type="radio" name="mood" value="{{ mood.status }}">{{ mood.status }}
+        {% endfor %}
+        <br>
+        心情留言板: <br>
+        <textarea name="user_post" cols="70" rows="3"></textarea><br>
+        <label for="user_id">暱稱:</label>
+        <input type="text" name="user_id" id="user_id">
+        <label for="user_pass">文章密碼:</label>
+        <input type="password" name="user_pass" id="user_pass">
+        <input class="btn" type="submit" value="張貼">
+        <input class="btn" type="reset" value="清除">
+    </form>
+    <br>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-header" align="center">
+                <h3>~~有屁快放，放完再放~~</h3>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-sm-12 col-md-4">
+            <div class="card">
+                <div class="card-header text-white bg-primary">
+                    【{{ post.nickname }}】覺得 {{ post.mood }}
+                </div>
+                <div class="card-body">
+                    {{ post.message | linebreaks }}
+                </div>
+                <div class="card-footer" align="right">
+                    <i><small>{{ post.pub_time }}</small></i>
+                    <i class="bi bi-trash" onclick="go_delete({{ post.id }})"></i>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
